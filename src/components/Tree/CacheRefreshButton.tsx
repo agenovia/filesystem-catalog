@@ -1,5 +1,5 @@
 import { HStack, IconButton, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { MdOutlineRefresh } from "react-icons/md";
 
 interface Props {
