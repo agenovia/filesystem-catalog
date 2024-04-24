@@ -1,5 +1,11 @@
 import { readdir } from 'node:fs/promises';
 import { performance } from 'node:perf_hooks';
+import NodeCache from 'node-cache';
+import { request, response, application } from 'express';
+
+
+const cache = NodeCache()
+
 
 
 try {

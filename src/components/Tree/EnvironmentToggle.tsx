@@ -5,7 +5,7 @@ interface Props {
   onToggleBranch: (branch: string) => void;
 }
 
-const BranchSelect = ({ onToggleBranch }: Props) => {
+const EnvironmentToggle = ({ onToggleBranch }: Props) => {
   const [currentBranch, setCurrentBranch] = useState("Mirror");
 
   const handleToggleBranch = () => {
@@ -21,6 +21,7 @@ const BranchSelect = ({ onToggleBranch }: Props) => {
         shadow={"md"}
         rounded="full"
         onClick={handleToggleBranch}
+        w="100px"
       >
         <Text
           as="b"
@@ -34,4 +35,4 @@ const BranchSelect = ({ onToggleBranch }: Props) => {
   );
 };
 
-export default BranchSelect;
+export default EnvironmentToggle;
