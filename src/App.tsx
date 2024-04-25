@@ -21,6 +21,7 @@ function App() {
   const gridStyle = {
     borderRadius: 10,
     padding: 2,
+    boxShadow: "lg",
   };
 
   return (
