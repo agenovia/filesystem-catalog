@@ -22,13 +22,15 @@ const CacheRefreshButton = ({ onCachRefresh }: Props) => {
   };
 
   return (
-    <HStack>
+    <HStack justify="space-evenly" w="100%">
       <Text fontSize="sm">{`Last updated: ${getISODate()}`}</Text>
       <IconButton
         icon={<MdOutlineRefresh />}
         aria-label="refresh-cache"
         title="Refresh the file cache"
         onClick={handleCachRefresh}
+        shadow={"lg"}
+        rounded="full"
       />
     </HStack>
   );

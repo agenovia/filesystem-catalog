@@ -1,13 +1,20 @@
 import { Box, HStack, Text, VStack } from "@chakra-ui/react";
 import CacheRefreshButton from "./CacheRefreshButton";
-import EnvironmentToggle from "./EnvironmentToggle";
+import EnvironmentToggle, { environment } from "./EnvironmentToggle";
 
 interface Props {
-  onSwitchEnvironment: (branch: string) => void;
+  initialEnvironment: environment;
+  environmentColor: string;
+  onToggleEnvironment: (env: environment) => void;
   onCacheRefresh: (timestamp: number) => void;
 }
 
-const TreeViewer = ({ onSwitchEnvironment, onCacheRefresh }: Props) => {
+const TreeViewer = ({
+  environmentColor,
+  initialEnvironment,
+  onToggleEnvironment,
+  onCacheRefresh,
+}: Props) => {
   const boxStyle = {
     width: "100%",
     backgroundColor: "gray.100",
@@ -22,7 +29,9 @@ const TreeViewer = ({ onSwitchEnvironment, onCacheRefresh }: Props) => {
           <HStack justifyContent={"space-around"}>
             <Text>Current Branch:</Text>
             <EnvironmentToggle
-              onToggleBranch={(branch) => onSwitchEnvironment(branch)}
+              environmentColor={environmentColor}
+              initialEnvironment={initialEnvironment}
+              onToggleEnvironment={(env) => onToggleEnvironment(env)}
             />
           </HStack>
         </Box>
