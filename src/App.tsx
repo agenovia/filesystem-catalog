@@ -5,6 +5,7 @@ import DirectoryViewer from "./components/Display/DirectoryViewer";
 import SearchBar from "./components/Search/SearchBar";
 import TreeViewer from "./components/Tree/TreeViewer";
 import useListDirectory, { environment } from "./hooks/useListDirectory";
+import NavBar from "./components/Navigation/NavBar";
 
 function App() {
   const [currentDirectory, setCurrentDirectory] = useState("/");
@@ -27,6 +28,7 @@ function App() {
   };
 
   const handleSwitchEnvironment = (env: environment) => {
+    setCurrentDirectory("/");
     setCurrentEnvironment(env);
     console.log(`Current environment: ${env}`);
   };
@@ -59,7 +61,7 @@ function App() {
         }}
         m={{ lg: 10, md: 4, sm: 2 }}
         gap={4}
-        templateRows={{ lg: "60px 30px 100%", md: "60px 60px 30px 100%" }}
+        templateRows={{ lg: "60px 60px 100%", md: "60px 60px 60px 100%" }}
         templateColumns={{ lg: "0.5fr 3fr", md: "100%" }}
         h={{ lg: "750px", md: "350px" }}
       >
@@ -96,7 +98,8 @@ function App() {
           )}
         </GridItem>
         <GridItem sx={gridStyle} area="nav" bg="lime">
-          <Text>I'm yer nav bar, matey</Text>
+          {/* <Text>I'm yer nav bar, matey</Text> */}
+          <NavBar onNavigate={(path: string) => handleChangeDirectory(path)} />
         </GridItem>
       </Grid>
     </>

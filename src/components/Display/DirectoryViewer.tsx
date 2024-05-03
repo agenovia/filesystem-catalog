@@ -13,9 +13,8 @@ import {
 } from "@chakra-ui/react";
 import { FaRegFolderOpen } from "react-icons/fa";
 import { FaRegFileLines } from "react-icons/fa6";
-import { IoIosReturnLeft, IoMdDownload } from "react-icons/io";
+import { IoMdDownload } from "react-icons/io";
 import { IListDirectoryResponse } from "../../hooks/useListDirectory";
-import { MdOutlineHome } from "react-icons/md";
 
 interface ViewerProps {
   directoryEntries: IListDirectoryResponse[] | undefined;
@@ -110,12 +109,6 @@ const DirectoryViewer = ({
     <Box h="90%" maxW="100%">
       {directoryEntries && (
         <>
-          <IconButton
-            icon={<MdOutlineHome />}
-            aria-label={`Home`}
-            title={`Home`}
-            onClick={() => onOpenDirectory("/")}
-          />
           {/* {backPath && (
               <IconButton
                 icon={<IoIosReturnLeft />}
