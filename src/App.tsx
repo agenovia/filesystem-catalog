@@ -1,4 +1,4 @@
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import "./App.css";
 import DirectoryViewer from "./components/Display/DirectoryViewer";
@@ -50,17 +50,18 @@ function App() {
       <Grid
         templateAreas={{
           lg: `"tree searchbar"
-                  "tree display"
+                  "tree nav"
                   "tree display"`,
-          sm: `"searchbar"
-                 "tree"
-                 "display"`,
+          sm: `"tree"
+                "searchbar"
+                "nav"
+               "display"`,
         }}
         m={{ lg: 10, md: 4, sm: 2 }}
-        gap={2}
-        templateRows={{ lg: "60px 1fr 1fr", sm: "60px 2fr 2fr" }}
-        templateColumns={{ lg: "1fr 3fr", sm: "1fr" }}
-        h={{ lg: "800px", md: "300px", sm: "100px" }}
+        gap={4}
+        templateRows={{ lg: "60px 30px 100%", md: "60px 60px 30px 100%" }}
+        templateColumns={{ lg: "0.5fr 3fr", md: "100%" }}
+        h={{ lg: "750px", md: "350px" }}
       >
         <GridItem sx={gridStyle} bg={envColor} area={"tree"} fontWeight="bold">
           <>
@@ -93,6 +94,9 @@ function App() {
               directoryEntries={data}
             />
           )}
+        </GridItem>
+        <GridItem sx={gridStyle} area="nav" bg="lime">
+          <Text>I'm yer nav bar, matey</Text>
         </GridItem>
       </Grid>
     </>

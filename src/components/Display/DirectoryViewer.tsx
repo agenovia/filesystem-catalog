@@ -100,7 +100,6 @@ const DirectoryViewer = ({
 
   const stackStyling = {
     spacing: 2,
-    "-ms-overflow-style": "none",
   };
 
   const backPath =
