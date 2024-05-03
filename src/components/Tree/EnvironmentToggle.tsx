@@ -74,7 +74,7 @@ const EnvironmentToggle = ({
     <HStack>
       <Button
         title="Switch branch"
-        shadow={"md"}
+        shadow={"lg"}
         rounded="full"
         onClick={handleToggleEnvironment}
         w="80px"

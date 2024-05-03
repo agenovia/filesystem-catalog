@@ -6,6 +6,7 @@ import SearchBar from "./components/Search/SearchBar";
 import TreeViewer from "./components/Tree/TreeViewer";
 import useListDirectory, { environment } from "./hooks/useListDirectory";
 import NavBar from "./components/Navigation/NavBar";
+import LoadingIndicator from "./components/Display/LoadingIndicator";
 
 function App() {
   const [currentDirectory, setCurrentDirectory] = useState("/");
@@ -90,6 +91,7 @@ function App() {
           borderWidth="5px"
         >
           {/* TODO (agenovia): add a loading display for when isLoading */}
+          {isLoading && <LoadingIndicator />}
           {!isLoading && (
             <DirectoryViewer
               onOpenDirectory={(path: string) => handleChangeDirectory(path)}

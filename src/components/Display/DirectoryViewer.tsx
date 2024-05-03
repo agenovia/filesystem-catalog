@@ -2,8 +2,12 @@
 // we organize layout here, but we define presentation in the cards
 
 import {
+  Badge,
   Box,
   Button,
+  Divider,
+  Grid,
+  GridItem,
   HStack,
   Icon,
   IconButton,
@@ -47,7 +51,7 @@ const DirectoryCard = ({ directoryEntry, onOpenDirectory }: CardProps) => {
         onClick={() => onOpenDirectory(directoryEntry.relativePath)}
       >
         <Tag bgColor="papayawhip">
-          <Icon sx={iconStyle} as={FaRegFolderOpen} />
+          <Icon boxSize="30px" sx={iconStyle} as={FaRegFolderOpen} />
         </Tag>
         {/* <Icon sx={iconStyle} as={IoIosReturnRight} /> */}
 
@@ -63,22 +67,87 @@ const DirectoryCard = ({ directoryEntry, onOpenDirectory }: CardProps) => {
     // icon type
     // TODO (agenovia): analysis on file extensions
     // for now, just use generic icons
-    return (
-      <HStack sx={cardStyle}>
-        <Tag mr={2}>
-          <Icon sx={iconStyle} as={FaRegFileLines} />
-        </Tag>
-        <Text fontSize="sm"> {directoryEntry.name}</Text>
 
-        <IconButton
-          icon={<IoMdDownload />}
-          aria-label={`Download ${directoryEntry.name}`}
-          title={`Download ${directoryEntry.name}`}
-          rounded="full"
-          boxSize="30px"
-          colorScheme="gray"
-        />
-      </HStack>
+    const fileSize = () => {
+      const suffixes: {
+        [key: number]: { s: string; c: string };
+      } = {
+        0: { s: "B", c: "gray.400" },
+        10: { s: "KB", c: "tomato" },
+        20: { s: "MB", c: "orange" },
+        30: { s: "GB", c: "yellow" },
+        40: { s: "TB", c: "lime" },
+        50: { s: "PB", c: "fuchsia" },
+      };
+
+      const size = directoryEntry.stat.size;
+      // if (size == 0) return "0 B";
+      const log2 = size === 0 ? 0 : Math.log2(size);
+      const tier =
+        size === 0
+          ? 0
+          : Math.max(
+              ...Object.keys(suffixes)
+                .map((key) => {
+                  return parseInt(key);
+                })
+                .filter((key) => {
+                  return log2 > key;
+                })
+            );
+      const sizeDisplay = size === 0 ? 0 : (size / 2 ** tier).toFixed(2);
+
+      // return `${(size / 2 ** tier).toFixed(2)} ${suffixes[tier]}`;
+      return (
+        <HStack spacing={2} title={`raw size: ${size} bytes`}>
+          <Text fontSize="sm">{`${sizeDisplay}`}</Text>
+          <Divider />
+          <Badge
+            padding={2}
+            borderRadius={10}
+            backgroundColor={suffixes[tier].c}
+          >{`${suffixes[tier].s}`}</Badge>
+        </HStack>
+      );
+    };
+
+    const gridStyle = {
+      w: "100%",
+      h: "10",
+    };
+    const lastModifiedTime = new Date(directoryEntry.stat.mtime).toISOString();
+    return (
+      <Grid
+        w="100%"
+        sx={cardStyle}
+        templateColumns={`40px 1fr 100px 100px 60px`}
+        gap={8}
+      >
+        <GridItem sx={gridStyle} overflowX={"hidden"} ml={1}>
+          <Tag mr={2}>
+            <Icon sx={iconStyle} as={FaRegFileLines} />
+          </Tag>
+        </GridItem>
+        <GridItem sx={gridStyle} overflowX={"hidden"}>
+          <Text fontSize="sm" noOfLines={1} title={directoryEntry.name}>
+            {directoryEntry.name}
+          </Text>
+        </GridItem>
+        <GridItem sx={gridStyle}>{fileSize()}</GridItem>
+        <GridItem sx={gridStyle}>
+          <Text fontSize="xs"> {lastModifiedTime}</Text>
+        </GridItem>
+        <GridItem sx={gridStyle}>
+          <IconButton
+            icon={<IoMdDownload />}
+            aria-label={`Download ${directoryEntry.name}`}
+            title={`Download ${directoryEntry.name}`}
+            rounded="full"
+            boxSize="30px"
+            colorScheme="gray"
+          />
+        </GridItem>
+      </Grid>
     );
   };
 
@@ -91,33 +160,14 @@ const DirectoryViewer = ({
 }: ViewerProps) => {
   if (!directoryEntries) return;
 
-  const boxOptions = {
-    borderRadius: 10,
-    padding: 2,
-    margin: 2,
-  };
-
   const stackStyling = {
     spacing: 2,
   };
-
-  const backPath =
-    directoryEntries[0].backPath.length > 0 &&
-    directoryEntries[0].backPath.split("\\").slice(0, -1).join("\\");
 
   return (
     <Box h="90%" maxW="100%">
       {directoryEntries && (
         <>
-          {/* {backPath && (
-              <IconButton
-                icon={<IoIosReturnLeft />}
-                aria-label={`Go back to ${backPath}`}
-                title={`Go back to ${backPath}`}
-                onClick={() => onOpenDirectory(backPath)}
-              />
-            )} */}
-
           <VStack
             sx={stackStyling}
             overflowY={"scroll"}
