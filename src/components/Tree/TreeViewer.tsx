@@ -1,6 +1,7 @@
 import { Box, HStack, Text, VStack } from "@chakra-ui/react";
+import { environment } from "../../api/listDirectory";
 import CacheRefreshButton from "./CacheRefreshButton";
-import EnvironmentToggle, { environment } from "./EnvironmentToggle";
+import EnvironmentToggle from "./EnvironmentToggle";
 
 interface Props {
   initialEnvironment: environment;

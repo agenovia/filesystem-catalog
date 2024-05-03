@@ -12,8 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { MdInfoOutline } from "react-icons/md";
-
-export type environment = "Mirror" | "Archive";
+import { environment } from "../../hooks/useListDirectory";
 
 interface Props {
   environmentColor: string;
@@ -36,7 +35,7 @@ const EnvironmentToggle = ({
   };
 
   const infoPopover =
-    currentBranch === "Mirror" ? (
+    currentBranch === "mirror" ? (
       <Text>
         You are currently viewing the{" "}
         <Text as="i" sx={infoTextStyle}>
@@ -64,9 +63,9 @@ const EnvironmentToggle = ({
 
   const handleToggleEnvironment = () => {
     const toggleTo =
-      currentBranch === "Mirror"
-        ? ("Archive" as environment)
-        : ("Mirror" as environment);
+      currentBranch === "mirror"
+        ? ("archive" as environment)
+        : ("mirror" as environment);
     setCurrentBranch(toggleTo);
     onToggleBranch(toggleTo);
   };

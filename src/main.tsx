@@ -8,7 +8,11 @@ import "./index.css";
 import theme from "./theme.ts";
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: 15 * 60 * 1000 } },
+  // set stale time to 30 seconds
+  // time is in ms so multiply by 1000
+  // this is a frontend cache that limits fetch requests on the server
+  // this is very useful for when users switch between directories back and forth
+  defaultOptions: { queries: { staleTime: 30 * 1000 } },
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
