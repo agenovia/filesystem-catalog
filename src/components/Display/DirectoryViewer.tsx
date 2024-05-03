@@ -124,13 +124,18 @@ const DirectoryViewer = ({
             overflowX={"hidden"}
             maxH="100%"
           >
-            {directoryEntries.map((entry: IListDirectoryResponse) => (
-              <DirectoryCard
-                key={entry.name}
-                directoryEntry={entry}
-                onOpenDirectory={(path: string) => onOpenDirectory(path)}
-              />
-            ))}
+            {/* Sorting */}
+            {directoryEntries
+              .sort((a, b) => {
+                return Number(b.isFile) - Number(a.isFile);
+              })
+              .map((entry: IListDirectoryResponse) => (
+                <DirectoryCard
+                  key={entry.name}
+                  directoryEntry={entry}
+                  onOpenDirectory={(path: string) => onOpenDirectory(path)}
+                />
+              ))}
           </VStack>
         </>
       )}
