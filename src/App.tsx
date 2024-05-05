@@ -1,15 +1,16 @@
-import { Grid, GridItem, Text } from "@chakra-ui/react";
+import { Grid, GridItem } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import "./App.css";
 import DirectoryViewer from "./components/Display/DirectoryViewer";
+import LoadingIndicator from "./components/Display/LoadingIndicator";
+import NavBar from "./components/Navigation/NavBar";
 import SearchBar from "./components/Search/SearchBar";
 import TreeViewer from "./components/Tree/TreeViewer";
 import useListDirectory, { environment } from "./hooks/useListDirectory";
-import NavBar from "./components/Navigation/NavBar";
-import LoadingIndicator from "./components/Display/LoadingIndicator";
 
 function App() {
-  const [currentDirectory, setCurrentDirectory] = useState("/");
+  const home = "\\";
+  const [currentDirectory, setCurrentDirectory] = useState(home);
   const [currentEnvironment, setCurrentEnvironment] =
     useState<environment>("mirror");
   const { data, error, isLoading } = useListDirectory({
@@ -29,7 +30,6 @@ function App() {
   };
 
   const handleSwitchEnvironment = (env: environment) => {
-    setCurrentDirectory("/");
     setCurrentEnvironment(env);
     console.log(`Current environment: ${env}`);
   };
@@ -43,7 +43,7 @@ function App() {
   const gridStyle = {
     borderRadius: 10,
     padding: 2,
-    boxShadow: "lg",
+    boxShadow: "md",
   };
 
   const envColor = currentEnvironment === "mirror" ? "tomato" : "teal.500";
@@ -53,11 +53,11 @@ function App() {
       <Grid
         templateAreas={{
           lg: `"tree searchbar"
-                  "tree nav"
+                  "tree navigation"
                   "tree display"`,
           sm: `"tree"
                 "searchbar"
-                "nav"
+                "navigation"
                "display"`,
         }}
         m={{ lg: 10, md: 4, sm: 2 }}
@@ -77,10 +77,11 @@ function App() {
             {/* TODO (agenovia):  Have a FIFO queue of last visited directories*/}
           </>
         </GridItem>
-        <GridItem sx={gridStyle} bg="orange.300" area={"searchbar"}>
+        <GridItem p={1} area={"searchbar"}>
           <SearchBar
             searchRoot={currentDirectory}
             onSearch={(e) => console.log(e)}
+            environmentColor={envColor}
           />
         </GridItem>
         <GridItem
@@ -99,9 +100,13 @@ function App() {
             />
           )}
         </GridItem>
-        <GridItem sx={gridStyle} area="nav" bg="lime">
+        <GridItem sx={gridStyle} area="navigation" bg={envColor}>
           {/* <Text>I'm yer nav bar, matey</Text> */}
-          <NavBar onNavigate={(path: string) => handleChangeDirectory(path)} />
+          <NavBar
+            home={home}
+            onNavigate={(path: string) => handleChangeDirectory(path)}
+            currentPath={currentDirectory}
+          />
         </GridItem>
       </Grid>
     </>

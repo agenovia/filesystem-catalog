@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   HStack,
   IconButton,
@@ -9,8 +10,9 @@ import {
   PopoverContent,
   PopoverTrigger,
   Text,
+  useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdInfoOutline } from "react-icons/md";
 import { environment } from "../../hooks/useListDirectory";
 
@@ -34,6 +36,7 @@ const EnvironmentToggle = ({
     overflow: "hidden",
   };
 
+  // UX: quick explainer on environments as a clickable tooltip
   const infoPopover =
     currentBranch === "mirror" ? (
       <Text>
@@ -61,6 +64,25 @@ const EnvironmentToggle = ({
       </Text>
     );
 
+  // UX: feedback on environment changes
+  const toast = useToast();
+  useEffect(() => {
+    toast({
+      position: "top",
+      duration: 1500,
+      render: () => (
+        <Box p={3} bg="white" shadow={"md"} borderRadius={10}>
+          Switched to the{" "}
+          <Text color={environmentColor} as="b">
+            {currentBranch.toUpperCase()}
+          </Text>{" "}
+          environment
+        </Box>
+      ),
+    });
+  }, [currentBranch]);
+
+  // track changes to environment and switch when invoked
   const handleToggleEnvironment = () => {
     const toggleTo =
       currentBranch === "mirror"

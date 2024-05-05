@@ -51,7 +51,7 @@ const DirectoryCard = ({ directoryEntry, onOpenDirectory }: CardProps) => {
         onClick={() => onOpenDirectory(directoryEntry.relativePath)}
       >
         <Tag bgColor="papayawhip">
-          <Icon boxSize="30px" sx={iconStyle} as={FaRegFolderOpen} />
+          <Icon boxSize="25px" sx={iconStyle} as={FaRegFolderOpen} />
         </Tag>
         {/* <Icon sx={iconStyle} as={IoIosReturnRight} /> */}
 
@@ -99,7 +99,7 @@ const DirectoryCard = ({ directoryEntry, onOpenDirectory }: CardProps) => {
 
       // return `${(size / 2 ** tier).toFixed(2)} ${suffixes[tier]}`;
       return (
-        <HStack spacing={2} title={`raw size: ${size} bytes`}>
+        <HStack spacing={2}>
           <Text fontSize="sm">{`${sizeDisplay}`}</Text>
           <Divider />
           <Badge
@@ -115,12 +115,14 @@ const DirectoryCard = ({ directoryEntry, onOpenDirectory }: CardProps) => {
       w: "100%",
       h: "10",
     };
-    const lastModifiedTime = new Date(directoryEntry.stat.mtime).toISOString();
+    const lastModifiedTime = new Date(directoryEntry.stat.mtime).toLocaleString(
+      "en-US"
+    );
     return (
       <Grid
         w="100%"
         sx={cardStyle}
-        templateColumns={`40px 1fr 100px 100px 60px`}
+        templateColumns={`40px 1fr 100px 120px 60px`}
         gap={8}
       >
         <GridItem sx={gridStyle} overflowX={"hidden"} ml={1}>
@@ -174,8 +176,11 @@ const DirectoryViewer = ({
             overflowX={"hidden"}
             maxH="100%"
           >
-            {/* Sorting */}
+            {/* Sort files to the top and then sort by modified date */}
             {directoryEntries
+              .sort((a, b) => {
+                return b.stat.mtime - a.stat.mtime;
+              })
               .sort((a, b) => {
                 return Number(b.isFile) - Number(a.isFile);
               })
