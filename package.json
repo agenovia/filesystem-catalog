@@ -17,6 +17,7 @@
     "@tanstack/react-query-devtools": "^5.29.2",
     "express": "^4.19.2",
     "framer-motion": "^11.0.28",
+    "fuzzysort": "^2.0.4",
     "node-cache": "^5.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

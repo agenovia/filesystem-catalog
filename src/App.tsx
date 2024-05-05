@@ -6,6 +6,7 @@ import LoadingIndicator from "./components/Display/LoadingIndicator";
 import NavBar from "./components/Navigation/NavBar";
 import SearchBar from "./components/Search/SearchBar";
 import TreeViewer from "./components/Tree/TreeViewer";
+import useFuzzySort from "./hooks/useFuzzySort";
 import useListDirectory, { environment } from "./hooks/useListDirectory";
 
 function App() {
@@ -18,6 +19,16 @@ function App() {
     path: currentDirectory,
     env: currentEnvironment,
   });
+  const [currentQuery, setCurrentQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+
+  useEffect(() => {
+    setTimeout(() => {
+      setDebouncedQuery(currentQuery);
+    }, 500);
+  }, [currentQuery]);
+
+  const files = useFuzzySort({ query: debouncedQuery, files: data });
 
   useEffect(() => {
     if (!isLoading && !error) console.log(data);
@@ -30,11 +41,13 @@ function App() {
   };
 
   const handleSwitchEnvironment = (env: environment) => {
+    setCurrentQuery("");
     setCurrentEnvironment(env);
     console.log(`Current environment: ${env}`);
   };
 
   const handleChangeDirectory = (path: string) => {
+    setCurrentQuery("");
     console.log(`Changing to: ${path}`);
     setCurrentDirectory(path);
     console.log(`Current directory: ${path}`);
@@ -79,8 +92,9 @@ function App() {
         </GridItem>
         <GridItem p={1} area={"searchbar"}>
           <SearchBar
+            currentValue={currentQuery}
             searchRoot={currentDirectory}
-            onSearch={(e) => console.log(e)}
+            onSearch={(e) => setCurrentQuery(e)}
             environmentColor={envColor}
           />
         </GridItem>
@@ -96,7 +110,7 @@ function App() {
           {!isLoading && (
             <DirectoryViewer
               onOpenDirectory={(path: string) => handleChangeDirectory(path)}
-              directoryEntries={data}
+              directoryEntries={files}
             />
           )}
         </GridItem>
