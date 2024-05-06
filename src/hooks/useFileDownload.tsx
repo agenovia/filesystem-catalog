@@ -4,11 +4,11 @@
 // limits cases where user flips between two locations to cross-check
 // possibly provide a utility to perform things like: directory comparisons
 import { useQuery } from "@tanstack/react-query";
-import { IListDirectoryRequest, IListDirectoryResponse } from "./types";
+import { IDownloadFileRequest } from "./types";
 
-const useListDirectory = ({ url, path, env }: IListDirectoryRequest) => {
-  const endpoint = "api/listDirectory";
-  const body = { env: env, path: path };
+const useDownloadFile = ({ url, path, env }: IDownloadFileRequest) => {
+  const endpoint = "api/downloadFile";
+  const body = { env, path };
 
   const fetchDirListing = async () => {
     const response = await fetch(`${url}${endpoint}`, {
@@ -18,7 +18,8 @@ const useListDirectory = ({ url, path, env }: IListDirectoryRequest) => {
       },
       body: JSON.stringify(body),
     });
-    return (await response.json()) as IListDirectoryResponse[];
+    // return (await response.json()) as IListDirectoryResponse[];
+    return await response.json();
   };
 
   const { data, error, isPending } = useQuery({
@@ -29,4 +30,4 @@ const useListDirectory = ({ url, path, env }: IListDirectoryRequest) => {
   return { data, error, isPending };
 };
 
-export default useListDirectory;
+export default useDownloadFile;

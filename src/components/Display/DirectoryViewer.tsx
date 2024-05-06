@@ -18,19 +18,25 @@ import {
 import { FaRegFolderOpen } from "react-icons/fa";
 import { FaRegFileLines } from "react-icons/fa6";
 import { IoMdDownload } from "react-icons/io";
-import { IListDirectoryResponse } from "../../hooks/useListDirectory";
+import { IListDirectoryResponse } from "../../hooks/types";
 
 interface ViewerProps {
   directoryEntries: IListDirectoryResponse[] | undefined;
   onOpenDirectory: (path: string) => void;
+  onDownloadFile: (filename: string) => void;
 }
 
 interface CardProps {
   directoryEntry: IListDirectoryResponse;
   onOpenDirectory: (path: string) => void;
+  onDownloadFile: (filename: string) => void;
 }
 
-const DirectoryCard = ({ directoryEntry, onOpenDirectory }: CardProps) => {
+const DirectoryCard = ({
+  directoryEntry,
+  onOpenDirectory,
+  onDownloadFile,
+}: CardProps) => {
   const cardStyle = {
     borderRadius: 10,
     m: 2,
@@ -113,7 +119,7 @@ const DirectoryCard = ({ directoryEntry, onOpenDirectory }: CardProps) => {
 
     const gridStyle = {
       w: "100%",
-      h: "10",
+      alignContent: "center",
     };
     const lastModifiedTime = new Date(directoryEntry.stat.mtime).toLocaleString(
       "en-US"
@@ -145,8 +151,9 @@ const DirectoryCard = ({ directoryEntry, onOpenDirectory }: CardProps) => {
             aria-label={`Download ${directoryEntry.name}`}
             title={`Download ${directoryEntry.name}`}
             rounded="full"
-            boxSize="30px"
+            boxSize="45px"
             colorScheme="gray"
+            onClick={() => onDownloadFile(directoryEntry.name)}
           />
         </GridItem>
       </Grid>
@@ -159,6 +166,7 @@ const DirectoryCard = ({ directoryEntry, onOpenDirectory }: CardProps) => {
 const DirectoryViewer = ({
   directoryEntries,
   onOpenDirectory,
+  onDownloadFile,
 }: ViewerProps) => {
   if (!directoryEntries) return;
 
@@ -172,7 +180,7 @@ const DirectoryViewer = ({
         <>
           <VStack
             sx={stackStyling}
-            overflowY={"scroll"}
+            overflowY={"auto"}
             overflowX={"hidden"}
             maxH="100%"
           >
@@ -189,6 +197,7 @@ const DirectoryViewer = ({
                   key={entry.name}
                   directoryEntry={entry}
                   onOpenDirectory={(path: string) => onOpenDirectory(path)}
+                  onDownloadFile={onDownloadFile}
                 />
               ))}
           </VStack>

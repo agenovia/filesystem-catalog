@@ -1,5 +1,5 @@
 import fuzzysort from "fuzzysort";
-import { IListDirectoryResponse } from "./useListDirectory";
+import { IListDirectoryResponse } from "./types";
 
 interface Props {
   query: string;

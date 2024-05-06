@@ -1,26 +1,31 @@
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem, HStack } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import "./App.css";
 import DirectoryViewer from "./components/Display/DirectoryViewer";
 import LoadingIndicator from "./components/Display/LoadingIndicator";
 import NavBar from "./components/Navigation/NavBar";
 import SearchBar from "./components/Search/SearchBar";
-import EnvironmentToggle from "./components/Tree/EnvironmentToggle";
+import CacheRefreshButton from "./components/Toggles/CacheRefreshButton";
+import EnvironmentToggle from "./components/Toggles/EnvironmentToggle";
+import { environment } from "./hooks/types";
 import useFuzzySort from "./hooks/useFuzzySort";
-import useListDirectory, { environment } from "./hooks/useListDirectory";
+import useListDirectory from "./hooks/useListDirectory";
+import downloadFile from "./services/downloadFile";
 
 function App() {
   const home = "\\";
   const [currentDirectory, setCurrentDirectory] = useState(home);
   const [currentEnvironment, setCurrentEnvironment] =
     useState<environment>("mirror");
-  const { data, error, isLoading } = useListDirectory({
+  const { data, error, isPending } = useListDirectory({
     url: "http://lagenovia.hpsj.com:42068/",
     path: currentDirectory,
     env: currentEnvironment,
   });
   const [currentQuery, setCurrentQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     setTimeout(() => {
@@ -31,12 +36,13 @@ function App() {
   const files = useFuzzySort({ query: debouncedQuery, files: data });
 
   useEffect(() => {
-    if (!isLoading && !error) console.log(data);
+    if (!isPending && !error) console.log(data);
     if (error) console.log(error);
   }, [data]);
 
   const handleCacheRefresh = (timestamp: number) => {
-    // this is where we replace the last cached key for the currentRoot
+    // this is where we invalidate queries if the user requests a local cache rebuild
+    queryClient.invalidateQueries();
     console.log(`Current timestamp: ${timestamp}`);
   };
 
@@ -53,6 +59,19 @@ function App() {
     console.log(`Current directory: ${path}`);
   };
 
+  const handleDownloadFile = (filename: string) => {
+    const filePath = `${currentDirectory}\\${filename}`;
+    console.log(
+      `Downloading ${filePath} from ${currentDirectory} in ${currentEnvironment}`
+    );
+
+    downloadFile({
+      url: "http://lagenovia.hpsj.com:42068/",
+      path: filePath,
+      env: currentEnvironment,
+    });
+  };
+
   const gridStyle = {
     borderRadius: 10,
     padding: 2,
@@ -64,26 +83,20 @@ function App() {
   return (
     <>
       <Grid
-        templateAreas={`"searchbar searchbar"
-                  "navigation switch"
-                  "display display"`}
+        templateAreas={`"search search" 
+                        "navigation toggles" 
+                        "display display"`}
         gap={4}
         m={{ lg: 10, md: 4, sm: 2 }}
         pl="35px"
         pr="35px"
-        h={{ lg: "750px", md: "350px" }}
+        h="75vh"
         templateRows={{
           base: "50px 65px 100%",
         }}
         templateColumns={"1fr 150px"}
-        // templateColumns={{
-        //   base: `"1fr 1fr"
-        //           "1fr 1fr"
-        //           "1fr 1fr"
-        // `,
-        // }}
       >
-        <GridItem p={1} area={"searchbar"}>
+        <GridItem p={1} area={"search"}>
           <SearchBar
             currentValue={currentQuery}
             searchRoot={currentDirectory}
@@ -98,22 +111,25 @@ function App() {
           borderColor={envColor}
           borderWidth="2px"
         >
-          {isLoading && <LoadingIndicator />}
-          {!isLoading && (
-            <DirectoryViewer
-              onOpenDirectory={(path: string) => handleChangeDirectory(path)}
-              directoryEntries={files}
-            />
-          )}
-        </GridItem>
-        <GridItem sx={gridStyle} area="navigation" bg={envColor}>
-          <NavBar
-            home={home}
-            onNavigate={(path: string) => handleChangeDirectory(path)}
-            currentPath={currentDirectory}
+          {isPending && <LoadingIndicator />}
+
+          <DirectoryViewer
+            onOpenDirectory={(path: string) => handleChangeDirectory(path)}
+            directoryEntries={files}
+            onDownloadFile={handleDownloadFile}
           />
         </GridItem>
-        <GridItem sx={gridStyle} area="switch" bg={envColor}>
+        <GridItem sx={gridStyle} area="navigation" bg={envColor}>
+          <HStack justifyContent="space-between">
+            <NavBar
+              home={home}
+              onNavigate={(path: string) => handleChangeDirectory(path)}
+              currentPath={currentDirectory}
+            />
+            <CacheRefreshButton onCachRefresh={handleCacheRefresh} />
+          </HStack>
+        </GridItem>
+        <GridItem sx={gridStyle} area="toggles" bg={envColor}>
           <EnvironmentToggle
             environmentColor={envColor}
             initialEnvironment={currentEnvironment}

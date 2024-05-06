@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { MdInfoOutline } from "react-icons/md";
-import { environment } from "../../hooks/useListDirectory";
+import { environment } from "../../hooks/types";
 
 interface Props {
   environmentColor: string;
@@ -69,9 +69,9 @@ const EnvironmentToggle = ({
   useEffect(() => {
     toast({
       position: "top",
-      duration: 1500,
+      duration: 1000,
       render: () => (
-        <Box p={3} bg="white" shadow={"md"} borderRadius={10}>
+        <Box mt={102} p={4} bg="white" shadow={"md"} borderRadius={10}>
           Switched to the{" "}
           <Text color={environmentColor} as="b">
             {currentBranch.toUpperCase()}

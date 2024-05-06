@@ -19,7 +19,7 @@ const SearchBar = ({
         value={currentValue}
         placeholder={`Search for files in "${searchRoot}"`}
         onChange={(e) => onSearch(e.target.value)}
-        color={environmentColor}
+        borderColor={environmentColor}
       />
     </Box>
   );
