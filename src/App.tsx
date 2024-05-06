@@ -5,7 +5,7 @@ import DirectoryViewer from "./components/Display/DirectoryViewer";
 import LoadingIndicator from "./components/Display/LoadingIndicator";
 import NavBar from "./components/Navigation/NavBar";
 import SearchBar from "./components/Search/SearchBar";
-import TreeViewer from "./components/Tree/TreeViewer";
+import EnvironmentToggle from "./components/Tree/EnvironmentToggle";
 import useFuzzySort from "./hooks/useFuzzySort";
 import useListDirectory, { environment } from "./hooks/useListDirectory";
 
@@ -64,32 +64,25 @@ function App() {
   return (
     <>
       <Grid
-        templateAreas={{
-          lg: `"tree searchbar"
-                  "tree navigation"
-                  "tree display"`,
-          sm: `"tree"
-                "searchbar"
-                "navigation"
-               "display"`,
-        }}
-        m={{ lg: 10, md: 4, sm: 2 }}
+        templateAreas={`"searchbar searchbar"
+                  "navigation switch"
+                  "display display"`}
         gap={4}
-        templateRows={{ lg: "60px 60px 100%", md: "60px 60px 60px 100%" }}
-        templateColumns={{ lg: "0.5fr 3fr", md: "100%" }}
+        m={{ lg: 10, md: 4, sm: 2 }}
+        pl="35px"
+        pr="35px"
         h={{ lg: "750px", md: "350px" }}
+        templateRows={{
+          base: "50px 65px 100%",
+        }}
+        templateColumns={"1fr 150px"}
+        // templateColumns={{
+        //   base: `"1fr 1fr"
+        //           "1fr 1fr"
+        //           "1fr 1fr"
+        // `,
+        // }}
       >
-        <GridItem sx={gridStyle} bg={envColor} area={"tree"} fontWeight="bold">
-          <>
-            <TreeViewer
-              initialEnvironment={currentEnvironment}
-              environmentColor={envColor}
-              onToggleEnvironment={handleSwitchEnvironment}
-              onCacheRefresh={handleCacheRefresh}
-            />
-            {/* TODO (agenovia):  Have a FIFO queue of last visited directories*/}
-          </>
-        </GridItem>
         <GridItem p={1} area={"searchbar"}>
           <SearchBar
             currentValue={currentQuery}
@@ -103,9 +96,8 @@ function App() {
           bg="gray.200"
           area={"display"}
           borderColor={envColor}
-          borderWidth="5px"
+          borderWidth="2px"
         >
-          {/* TODO (agenovia): add a loading display for when isLoading */}
           {isLoading && <LoadingIndicator />}
           {!isLoading && (
             <DirectoryViewer
@@ -115,11 +107,17 @@ function App() {
           )}
         </GridItem>
         <GridItem sx={gridStyle} area="navigation" bg={envColor}>
-          {/* <Text>I'm yer nav bar, matey</Text> */}
           <NavBar
             home={home}
             onNavigate={(path: string) => handleChangeDirectory(path)}
             currentPath={currentDirectory}
+          />
+        </GridItem>
+        <GridItem sx={gridStyle} area="switch" bg={envColor}>
+          <EnvironmentToggle
+            environmentColor={envColor}
+            initialEnvironment={currentEnvironment}
+            onToggleEnvironment={handleSwitchEnvironment}
           />
         </GridItem>
       </Grid>

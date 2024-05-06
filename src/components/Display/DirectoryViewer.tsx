@@ -72,12 +72,12 @@ const DirectoryCard = ({ directoryEntry, onOpenDirectory }: CardProps) => {
       const suffixes: {
         [key: number]: { s: string; c: string };
       } = {
-        0: { s: "B", c: "gray.400" },
-        10: { s: "KB", c: "tomato" },
+        0: { s: "B", c: "lightgray" },
+        10: { s: "KB", c: "dodgerblue" },
         20: { s: "MB", c: "orange" },
-        30: { s: "GB", c: "yellow" },
+        30: { s: "GB", c: "tomato" },
         40: { s: "TB", c: "lime" },
-        50: { s: "PB", c: "fuchsia" },
+        50: { s: "PB", c: "fuschia" },
       };
 
       const size = directoryEntry.stat.size;
