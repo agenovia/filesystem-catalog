@@ -5,7 +5,6 @@ import {
   Badge,
   Box,
   Button,
-  Divider,
   Grid,
   GridItem,
   HStack,
@@ -15,8 +14,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { FaRegFolderOpen } from "react-icons/fa";
-import { FaRegFileLines } from "react-icons/fa6";
+import { GoFile, GoFileDirectory } from "react-icons/go";
 import { IoMdDownload } from "react-icons/io";
 import { IListDirectoryResponse } from "../../hooks/types";
 
@@ -57,7 +55,7 @@ const DirectoryCard = ({
         onClick={() => onOpenDirectory(directoryEntry.relativePath)}
       >
         <Tag bgColor="papayawhip">
-          <Icon boxSize="25px" sx={iconStyle} as={FaRegFolderOpen} />
+          <Icon boxSize="25px" sx={iconStyle} as={GoFileDirectory} />
         </Tag>
         {/* <Icon sx={iconStyle} as={IoIosReturnRight} /> */}
 
@@ -101,13 +99,17 @@ const DirectoryCard = ({
                   return log2 > key;
                 })
             );
-      const sizeDisplay = size === 0 ? 0 : (size / 2 ** tier).toFixed(2);
+      const sizeDisplay =
+        size === 0
+          ? 0
+          : (size / 2 ** tier) % 1 === 0
+          ? (size / 2 ** tier).toFixed()
+          : (size / 2 ** tier).toFixed(2);
 
       // return `${(size / 2 ** tier).toFixed(2)} ${suffixes[tier]}`;
       return (
-        <HStack spacing={2}>
+        <HStack spacing={2} justifyContent={"right"} title={`Bytes: ${size}`}>
           <Text fontSize="sm">{`${sizeDisplay}`}</Text>
-          <Divider />
           <Badge
             padding={2}
             borderRadius={10}
@@ -125,38 +127,40 @@ const DirectoryCard = ({
       "en-US"
     );
     return (
-      <Grid
-        w="100%"
-        sx={cardStyle}
-        templateColumns={`40px 1fr 100px 120px 60px`}
-        gap={8}
-      >
-        <GridItem sx={gridStyle} overflowX={"hidden"} ml={1}>
-          <Tag mr={2}>
-            <Icon sx={iconStyle} as={FaRegFileLines} />
-          </Tag>
-        </GridItem>
-        <GridItem sx={gridStyle} overflowX={"hidden"}>
-          <Text fontSize="sm" noOfLines={1} title={directoryEntry.name}>
-            {directoryEntry.name}
-          </Text>
-        </GridItem>
-        <GridItem sx={gridStyle}>{fileSize()}</GridItem>
-        <GridItem sx={gridStyle}>
-          <Text fontSize="xs"> {lastModifiedTime}</Text>
-        </GridItem>
-        <GridItem sx={gridStyle}>
-          <IconButton
-            icon={<IoMdDownload />}
-            aria-label={`Download ${directoryEntry.name}`}
-            title={`Download ${directoryEntry.name}`}
-            rounded="full"
-            boxSize="45px"
-            colorScheme="gray"
-            onClick={() => onDownloadFile(directoryEntry.name)}
-          />
-        </GridItem>
-      </Grid>
+      <>
+        <Grid
+          w="100%"
+          sx={cardStyle}
+          templateColumns={`40px 1fr 100px 120px 60px`}
+          gap={8}
+        >
+          <GridItem sx={gridStyle} overflowX={"hidden"} ml={1}>
+            <Tag mr={2}>
+              <Icon sx={iconStyle} as={GoFile} />
+            </Tag>
+          </GridItem>
+          <GridItem sx={gridStyle} overflowX={"hidden"}>
+            <Text fontSize="sm" noOfLines={1} title={directoryEntry.name}>
+              {directoryEntry.name}
+            </Text>
+          </GridItem>
+          <GridItem sx={gridStyle}>{fileSize()}</GridItem>
+          <GridItem sx={gridStyle}>
+            <Text fontSize="xs"> {lastModifiedTime}</Text>
+          </GridItem>
+          <GridItem sx={gridStyle}>
+            <IconButton
+              icon={<IoMdDownload />}
+              aria-label={`Download ${directoryEntry.name}`}
+              title={`Download ${directoryEntry.name}`}
+              rounded="full"
+              boxSize="45px"
+              colorScheme="gray"
+              onClick={() => onDownloadFile(directoryEntry.name)}
+            />
+          </GridItem>
+        </Grid>
+      </>
     );
   };
 

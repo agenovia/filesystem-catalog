@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import DirectoryViewer from "./components/Display/DirectoryViewer";
 import LoadingIndicator from "./components/Display/LoadingIndicator";
+import Summary from "./components/Display/Summary";
 import NavBar from "./components/Navigation/NavBar";
 import SearchBar from "./components/Search/SearchBar";
 import CacheRefreshButton from "./components/Toggles/CacheRefreshButton";
@@ -111,6 +112,7 @@ function App() {
           borderColor={envColor}
           borderWidth="2px"
         >
+          <Summary directoryEntries={files} envColor={envColor} />
           {isPending && <LoadingIndicator />}
 
           <DirectoryViewer

@@ -69,7 +69,7 @@ const EnvironmentToggle = ({
   useEffect(() => {
     toast({
       position: "top",
-      duration: 1000,
+      duration: 1200,
       render: () => (
         <Box mt={102} p={4} bg="white" shadow={"md"} borderRadius={10}>
           Switched to the{" "}
@@ -95,7 +95,7 @@ const EnvironmentToggle = ({
   return (
     <HStack>
       <Button
-        title="Switch branch"
+        title="Switch environment"
         shadow={"lg"}
         rounded="full"
         onClick={handleToggleEnvironment}

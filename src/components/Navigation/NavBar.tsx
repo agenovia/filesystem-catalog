@@ -40,8 +40,16 @@ const NavBar = ({ onNavigate, home, currentPath }: Props) => {
         bg="white"
         shadow="md"
       />
-      <Box bg="white" p={2} ml={2} shadow="md" borderRadius={10}>
-        <Breadcrumb separator="\" overflowX={"auto"}>
+      <Box
+        bg="white"
+        p={2}
+        ml={2}
+        shadow="md"
+        borderRadius={10}
+        overflowX={"auto"}
+        maxW="60vw"
+      >
+        <Breadcrumb separator="\">
           {pathLinks.slice(0, -1).map((x) => (
             <BreadcrumbItem key={x.path}>
               <BreadcrumbLink onClick={() => onNavigate(x.link)}>

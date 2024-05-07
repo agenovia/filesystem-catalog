@@ -15,6 +15,8 @@ const downloadFile = ({ url, path, env }: IDownloadFileRequest) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Accept-Encoding": "gzip, deflate, br",
+        Connection: "keep-alive",
       },
       body: JSON.stringify(body),
     });
