@@ -21,12 +21,16 @@ const useListDirectory = ({ url, path, env }: IListDirectoryRequest) => {
     return (await response.json()) as IListDirectoryResponse[];
   };
 
-  const { data, error, isPending } = useQuery({
+  const {
+    data: directoryListing,
+    error,
+    isPending,
+  } = useQuery({
     queryKey: [env, path],
     queryFn: fetchDirListing,
   });
 
-  return { data, error, isPending };
+  return { directoryListing, error, isPending };
 };
 
 export default useListDirectory;

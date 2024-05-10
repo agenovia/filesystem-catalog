@@ -57,8 +57,6 @@ const DirectoryCard = ({
         <Tag bgColor="papayawhip">
           <Icon boxSize="25px" sx={iconStyle} as={GoFileDirectory} />
         </Tag>
-        {/* <Icon sx={iconStyle} as={IoIosReturnRight} /> */}
-
         <Text as={Button} fontSize="md" w="100%">
           {directoryEntry.name}
         </Text>
@@ -67,31 +65,33 @@ const DirectoryCard = ({
   };
 
   const FileCard = () => {
-    // the FileCard has to determine the proper
-    // icon type
     // TODO (agenovia): analysis on file extensions
     // for now, just use generic icons
+    // the FileCard has to determine the proper
+    // icon type and display appropriately
 
     const fileSize = () => {
-      const suffixes: {
+      const memUnits: {
         [key: number]: { s: string; c: string };
       } = {
         0: { s: "B", c: "lightgray" },
         10: { s: "KB", c: "dodgerblue" },
         20: { s: "MB", c: "orange" },
         30: { s: "GB", c: "tomato" },
-        40: { s: "TB", c: "lime" },
-        50: { s: "PB", c: "fuschia" },
+        40: { s: "TB", c: "magenta" },
       };
 
       const size = directoryEntry.stat.size;
       // if (size == 0) return "0 B";
+      // get log base-2 of size
       const log2 = size === 0 ? 0 : Math.log2(size);
-      const tier =
+      // get unit name of size by filtering largest of the
+      // group of keys smaller than log2(size)
+      const unit =
         size === 0
           ? 0
           : Math.max(
-              ...Object.keys(suffixes)
+              ...Object.keys(memUnits)
                 .map((key) => {
                   return parseInt(key);
                 })
@@ -99,22 +99,23 @@ const DirectoryCard = ({
                   return log2 > key;
                 })
             );
+      // fix up for presentation by displaying 2 decimal places
+      // displays no decimals if number is round
       const sizeDisplay =
         size === 0
           ? 0
-          : (size / 2 ** tier) % 1 === 0
-          ? (size / 2 ** tier).toFixed()
-          : (size / 2 ** tier).toFixed(2);
+          : (size / 2 ** unit) % 1 === 0
+          ? (size / 2 ** unit).toFixed()
+          : (size / 2 ** unit).toFixed(2);
 
-      // return `${(size / 2 ** tier).toFixed(2)} ${suffixes[tier]}`;
       return (
         <HStack spacing={2} justifyContent={"right"} title={`Bytes: ${size}`}>
           <Text fontSize="sm">{`${sizeDisplay}`}</Text>
           <Badge
             padding={2}
             borderRadius={10}
-            backgroundColor={suffixes[tier].c}
-          >{`${suffixes[tier].s}`}</Badge>
+            backgroundColor={memUnits[unit].c}
+          >{`${memUnits[unit].s}`}</Badge>
         </HStack>
       );
     };
@@ -196,9 +197,9 @@ const DirectoryViewer = ({
               .sort((a, b) => {
                 return Number(b.isFile) - Number(a.isFile);
               })
-              .map((entry: IListDirectoryResponse) => (
+              .map((entry: IListDirectoryResponse, index) => (
                 <DirectoryCard
-                  key={entry.name}
+                  key={index}
                   directoryEntry={entry}
                   onOpenDirectory={(path: string) => onOpenDirectory(path)}
                   onDownloadFile={onDownloadFile}

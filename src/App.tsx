@@ -4,29 +4,44 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import DirectoryViewer from "./components/Display/DirectoryViewer";
 import LoadingIndicator from "./components/Display/LoadingIndicator";
-import Summary from "./components/Display/Summary";
+import SearchText from "./components/Display/SearchText";
+import Summary, {
+  defaultHiddenTypes,
+  hiddenSections,
+} from "./components/Display/Summary";
 import NavBar from "./components/Navigation/NavBar";
 import SearchBar from "./components/Search/SearchBar";
 import CacheRefreshButton from "./components/Toggles/CacheRefreshButton";
 import EnvironmentToggle from "./components/Toggles/EnvironmentToggle";
 import { environment } from "./hooks/types";
 import useFuzzySort from "./hooks/useFuzzySort";
+import useHideFromView from "./hooks/useHideFromView";
 import useListDirectory from "./hooks/useListDirectory";
-import downloadFile from "./services/downloadFile";
 
 function App() {
   const home = "\\";
+  const queryClient = useQueryClient();
+
   const [currentDirectory, setCurrentDirectory] = useState(home);
   const [currentEnvironment, setCurrentEnvironment] =
     useState<environment>("mirror");
-  const { data, error, isPending } = useListDirectory({
+  const { directoryListing, error, isPending } = useListDirectory({
     url: "http://lagenovia.hpsj.com:42068/",
     path: currentDirectory,
     env: currentEnvironment,
   });
   const [currentQuery, setCurrentQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
-  const queryClient = useQueryClient();
+  const [hiddenTypes, setHiddenTypes] = useState(defaultHiddenTypes);
+  const sortedFiles = useFuzzySort({
+    query: debouncedQuery,
+    files: directoryListing,
+  });
+  const filteredFiles = useHideFromView({
+    hidden: hiddenTypes,
+    files: sortedFiles,
+  });
+  const files = filteredFiles;
 
   useEffect(() => {
     setTimeout(() => {
@@ -34,30 +49,28 @@ function App() {
     }, 500);
   }, [currentQuery]);
 
-  const files = useFuzzySort({ query: debouncedQuery, files: data });
-
   useEffect(() => {
-    if (!isPending && !error) console.log(data);
+    // if (!isPending && !error) console.log(directoryListing);
     if (error) console.log(error);
-  }, [data]);
+  }, [directoryListing]);
 
   const handleCacheRefresh = (timestamp: number) => {
     // this is where we invalidate queries if the user requests a local cache rebuild
     queryClient.invalidateQueries();
-    console.log(`Current timestamp: ${timestamp}`);
+    // console.log(`Current timestamp: ${timestamp}`);
   };
 
   const handleSwitchEnvironment = (env: environment) => {
     setCurrentQuery("");
     setCurrentEnvironment(env);
-    console.log(`Current environment: ${env}`);
+    // console.log(`Current environment: ${env}`);
   };
 
   const handleChangeDirectory = (path: string) => {
     setCurrentQuery("");
-    console.log(`Changing to: ${path}`);
+    // console.log(`Changing to: ${path}`);
     setCurrentDirectory(path);
-    console.log(`Current directory: ${path}`);
+    // console.log(`Current directory: ${path}`);
   };
 
   const handleDownloadFile = (filename: string) => {
@@ -66,17 +79,39 @@ function App() {
       `Downloading ${filePath} from ${currentDirectory} in ${currentEnvironment}`
     );
 
-    downloadFile({
-      url: "http://lagenovia.hpsj.com:42068/",
-      path: filePath,
-      env: currentEnvironment,
-    });
+    // downloadFile({
+    //   url: "http://lagenovia.hpsj.com:42068/",
+    //   path: filePath,
+    //   env: currentEnvironment,
+    // });
+  };
+
+  const handleHideFromView = (hidden: hiddenSections) => {
+    setHiddenTypes(hidden);
   };
 
   const gridStyle = {
     borderRadius: 10,
     padding: 2,
     boxShadow: "md",
+  };
+
+  const tearStyleUp = {
+    p: 3,
+    boxShadow: "md",
+    borderRadius: "15px 0px 30px 0px",
+  };
+
+  const tearStyleDown = {
+    p: 3,
+    boxShadow: "md",
+    borderRadius: "30px 0px 15px 0px",
+  };
+
+  const swipSwap = (config: string) => {
+    // swap inner and outer
+    const [outA, inA, inB, outB] = config.split(" ");
+    return [outB, inB, inA, outA].join(" ");
   };
 
   const envColor = currentEnvironment === "mirror" ? "tomato" : "teal.500";
@@ -112,16 +147,32 @@ function App() {
           borderColor={envColor}
           borderWidth="2px"
         >
-          <Summary directoryEntries={files} envColor={envColor} />
+          <Summary
+            directoryEntries={sortedFiles}
+            envColor={envColor}
+            onHideFromView={(hidden) => handleHideFromView(hidden)}
+          />
           {isPending && <LoadingIndicator />}
-
+          <SearchText query={currentQuery} />
           <DirectoryViewer
             onOpenDirectory={(path: string) => handleChangeDirectory(path)}
             directoryEntries={files}
             onDownloadFile={handleDownloadFile}
           />
         </GridItem>
-        <GridItem sx={gridStyle} area="navigation" bg={envColor}>
+        <GridItem
+          // sx={gridStyle}
+          sx={
+            currentEnvironment === "mirror"
+              ? tearStyleUp
+              : {
+                  ...tearStyleUp,
+                  borderRadius: swipSwap(tearStyleUp.borderRadius),
+                }
+          }
+          area="navigation"
+          bg={envColor}
+        >
           <HStack justifyContent="space-between">
             <NavBar
               home={home}
@@ -131,7 +182,18 @@ function App() {
             <CacheRefreshButton onCachRefresh={handleCacheRefresh} />
           </HStack>
         </GridItem>
-        <GridItem sx={gridStyle} area="toggles" bg={envColor}>
+        <GridItem
+          sx={
+            currentEnvironment === "mirror"
+              ? tearStyleDown
+              : {
+                  ...tearStyleDown,
+                  borderRadius: swipSwap(tearStyleDown.borderRadius),
+                }
+          }
+          area="toggles"
+          bg={envColor}
+        >
           <EnvironmentToggle
             environmentColor={envColor}
             initialEnvironment={currentEnvironment}
