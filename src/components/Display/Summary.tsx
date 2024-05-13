@@ -40,6 +40,8 @@ const Summary = ({ directoryEntries, envColor, onHideFromView }: Props) => {
     borderWidth: "1px",
     bgColor: "white",
     borderColor: envColor,
+    // do not allow user-highlighting
+    // useful for when user double-clicks the toggles to hide/show
     userSelect: "none",
   };
 

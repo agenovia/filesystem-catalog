@@ -26,7 +26,7 @@ function App() {
   const [currentEnvironment, setCurrentEnvironment] =
     useState<environment>("mirror");
   const { directoryListing, error, isPending } = useListDirectory({
-    url: "http://lagenovia.hpsj.com:42068/",
+    url: import.meta.env.VITE_BASEURL,
     path: currentDirectory,
     env: currentEnvironment,
   });
@@ -44,9 +44,12 @@ function App() {
   const files = filteredFiles;
 
   useEffect(() => {
+    // currentQuery updates on every searchbar change
+    // debounce for 700ms before attempting a search
+    // UX-wise it's similar to many applications that provide search
     setTimeout(() => {
       setDebouncedQuery(currentQuery);
-    }, 500);
+    }, 700);
   }, [currentQuery]);
 
   useEffect(() => {
@@ -80,7 +83,7 @@ function App() {
     );
 
     // downloadFile({
-    //   url: "http://lagenovia.hpsj.com:42068/",
+    //   url: import.meta.env.VITE_BASEURL,
     //   path: filePath,
     //   env: currentEnvironment,
     // });
@@ -109,7 +112,7 @@ function App() {
   };
 
   const swipSwap = (config: string) => {
-    // swap inner and outer
+    // swap inner and outer border radii
     const [outA, inA, inB, outB] = config.split(" ");
     return [outB, inB, inA, outA].join(" ");
   };
@@ -161,7 +164,6 @@ function App() {
           />
         </GridItem>
         <GridItem
-          // sx={gridStyle}
           sx={
             currentEnvironment === "mirror"
               ? tearStyleUp

@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { IDownloadFileRequest } from "./types";
 
 const useDownloadFile = ({ url, path, env }: IDownloadFileRequest) => {
-  const endpoint = "api/downloadFile";
+  const endpoint = import.meta.env.VITE_FILEDOWNLOAD_ENDPOINT;
   const body = { env, path };
 
   const fetchDirListing = async () => {

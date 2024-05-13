@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { IListDirectoryRequest, IListDirectoryResponse } from "./types";
 
 const useListDirectory = ({ url, path, env }: IListDirectoryRequest) => {
-  const endpoint = "api/listDirectory";
+  const endpoint = import.meta.env.VITE_LISTDIRECTORY_ENDPOINT;
   const body = { env: env, path: path };
 
   const fetchDirListing = async () => {
