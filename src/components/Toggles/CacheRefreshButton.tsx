@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { MdOutlineRefresh } from "react-icons/md";
 
 interface Props {
-  onCachRefresh: (updateTime: number) => void;
+  onCachRefresh: () => void;
   isPending: boolean;
 }
 
@@ -11,9 +11,8 @@ const CacheRefreshButton = ({ onCachRefresh, isPending }: Props) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleCachRefresh = () => {
-    const now = Date.now();
-    setIsRefreshing(true);
-    onCachRefresh(now);
+    !isRefreshing && setIsRefreshing(true);
+    onCachRefresh();
   };
 
   // UX: show a slight delay
@@ -22,14 +21,15 @@ const CacheRefreshButton = ({ onCachRefresh, isPending }: Props) => {
   // feel like something is "working"
   useEffect(() => {
     setTimeout(() => {
-      setIsRefreshing(false);
+      isRefreshing && setIsRefreshing(false);
     }, 750);
   }, [isRefreshing]);
 
   return (
     <Box userSelect={"none"}>
-      {isRefreshing && <Spinner mr={2} mt={1} speed="0.7s" />}
-      {!isRefreshing && (
+      {isRefreshing ? (
+        <Spinner mr={2} mt={1} speed="0.7s" />
+      ) : (
         <IconButton
           icon={<MdOutlineRefresh />}
           aria-label="refresh-cache"

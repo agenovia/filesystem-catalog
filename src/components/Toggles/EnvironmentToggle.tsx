@@ -105,9 +105,6 @@ const EnvironmentToggle = ({
           {currentBranch}
         </Text>
       </Button>
-      {/* <Tooltip label="Phone number" fontSize="md" placement="auto-end">
-        <MdInfoOutline />
-      </Tooltip> */}
       <Popover placement="top-start">
         <PopoverTrigger>
           <IconButton

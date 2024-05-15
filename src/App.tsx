@@ -57,10 +57,9 @@ function App() {
     if (error) console.log(error);
   }, [directoryListing]);
 
-  const handleCacheRefresh = (timestamp: number) => {
+  const handleCacheRefresh = () => {
     // this is where we invalidate queries if the user requests a local cache rebuild
     queryClient.invalidateQueries();
-    console.log(`Current timestamp: ${timestamp}`);
   };
 
   const handleSwitchEnvironment = (env: environment) => {
