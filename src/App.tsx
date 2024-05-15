@@ -181,7 +181,10 @@ function App() {
               onNavigate={(path: string) => handleChangeDirectory(path)}
               currentPath={currentDirectory}
             />
-            <CacheRefreshButton onCachRefresh={handleCacheRefresh} />
+            <CacheRefreshButton
+              isLoading={isPending}
+              onCachRefresh={handleCacheRefresh}
+            />
           </HStack>
         </GridItem>
         <GridItem

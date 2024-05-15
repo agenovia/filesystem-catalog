@@ -15,11 +15,12 @@ const loadingMessages = () => {
 
   const messages = [
     { msg: "Hang tight!", alts: ["⏳", "⏱️", "⏲️", "⏰"] },
-    { msg: "Cataloging the files for you", alts: ["👩‍💻", "🐱‍💻", "👨‍💻"] },
+    { msg: "CAT-aloging the files for you", alts: ["🐱", "😸"] },
     { msg: "Still churning", alts: ["🌀", "🌪️", "🌌"] },
     { msg: "Are these the droids you're looking for?", alts: droids },
     { msg: "If your files are out there, I'll find 'em", alts: ["🕵️", "🕵️"] },
     { msg: "Almost there!", alts: ["🏃‍♀️", "🏃"] },
+    { msg: "All glory to the hypno-toad!", alts: ["😵💫🐸💫😵"] },
     { msg: "Uh oh! Traffic jam... 🛑", alts: jam },
   ];
   return messages;
@@ -51,11 +52,11 @@ const LoadingIndicator = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // UX: show spinner if user has been waiting 50+ ms
+  // UX: show spinner only if user has been waiting 50+ ms
   useEffect(() => {
     setTimeout(() => {
       setStart(true);
-    }, 100);
+    }, 50);
   }, []);
 
   return (
