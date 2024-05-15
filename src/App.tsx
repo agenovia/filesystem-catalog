@@ -182,7 +182,7 @@ function App() {
               currentPath={currentDirectory}
             />
             <CacheRefreshButton
-              isLoading={isPending}
+              isPending={isPending}
               onCachRefresh={handleCacheRefresh}
             />
           </HStack>

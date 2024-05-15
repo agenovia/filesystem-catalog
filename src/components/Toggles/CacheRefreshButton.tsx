@@ -4,10 +4,10 @@ import { MdOutlineRefresh } from "react-icons/md";
 
 interface Props {
   onCachRefresh: (updateTime: number) => void;
-  isLoading: boolean;
+  isPending: boolean;
 }
 
-const CacheRefreshButton = ({ onCachRefresh, isLoading }: Props) => {
+const CacheRefreshButton = ({ onCachRefresh, isPending }: Props) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleCachRefresh = () => {
@@ -37,7 +37,7 @@ const CacheRefreshButton = ({ onCachRefresh, isLoading }: Props) => {
           onClick={handleCachRefresh}
           shadow={"lg"}
           rounded="full"
-          isDisabled={isLoading}
+          isDisabled={isPending}
         />
       )}
     </Box>
