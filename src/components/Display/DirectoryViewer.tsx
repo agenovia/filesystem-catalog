@@ -44,7 +44,7 @@ const DirectoryCard = ({
   };
 
   const iconStyle = {
-    fontSize: "lg",
+    fontSize: "xl",
     minHeight: "20px",
   };
 
@@ -134,6 +134,9 @@ const DirectoryCard = ({
           sx={cardStyle}
           templateColumns={`40px 1fr 100px 120px 60px`}
           gap={8}
+          borderWidth="1px"
+          borderBottom="dashed"
+          borderColor="lightgrey"
         >
           <GridItem sx={gridStyle} overflowX={"hidden"} ml={1}>
             <Tag mr={2}>
@@ -188,6 +191,8 @@ const DirectoryViewer = ({
             overflowY={"auto"}
             overflowX={"hidden"}
             maxH="100%"
+            pr="4%"
+            pl="4%"
           >
             {/* Sort files to the top and then sort by modified date */}
             {directoryEntries

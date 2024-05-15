@@ -50,15 +50,15 @@ const NavBar = ({ onNavigate, home, currentPath }: Props) => {
         maxW="60vw"
       >
         <Breadcrumb separator="\">
-          {pathLinks.slice(0, -1).map((x) => (
-            <BreadcrumbItem key={x.path}>
+          {pathLinks.slice(0, -1).map((x, idx) => (
+            <BreadcrumbItem key={`${x.path}-${idx}`}>
               <BreadcrumbLink onClick={() => onNavigate(x.link)}>
                 <Text as="b">{x.path}</Text>
               </BreadcrumbLink>
             </BreadcrumbItem>
           ))}
-          {pathLinks.slice(-1).map((x) => (
-            <BreadcrumbItem key={x.path} isCurrentPage>
+          {pathLinks.slice(-1).map((x, idx) => (
+            <BreadcrumbItem key={`${x.path}-${idx}`} isCurrentPage>
               <BreadcrumbLink>
                 <Text>{x.path}</Text>
               </BreadcrumbLink>

@@ -22,13 +22,13 @@ const CacheRefreshButton = ({ onCachRefresh, isPending }: Props) => {
   useEffect(() => {
     setTimeout(() => {
       isRefreshing && setIsRefreshing(false);
-    }, 750);
+    }, 900);
   }, [isRefreshing]);
 
   return (
     <Box userSelect={"none"}>
       {isRefreshing ? (
-        <Spinner mr={2} mt={1} speed="0.7s" />
+        <Spinner mr={2} mt={1} speed="0.65s" />
       ) : (
         <IconButton
           icon={<MdOutlineRefresh />}

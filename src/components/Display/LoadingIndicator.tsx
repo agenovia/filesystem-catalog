@@ -52,11 +52,14 @@ const LoadingIndicator = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // UX: show spinner only if user has been waiting 50+ ms
+  // UX: show spinner only if user has been waiting 150ms+
+  // 100ms is the "threshold of immediacy" so going a little over
+  // makes it respond right around when a user starts to think
+  // "hey what's happening"
   useEffect(() => {
     setTimeout(() => {
       setStart(true);
-    }, 50);
+    }, 150);
   }, []);
 
   return (
