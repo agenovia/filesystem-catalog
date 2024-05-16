@@ -16,18 +16,26 @@ import {
 } from "@chakra-ui/react";
 import { GoFile, GoFileDirectory } from "react-icons/go";
 import { IoMdDownload } from "react-icons/io";
-import { IListDirectoryResponse } from "../../hooks/types";
+import { IListDirectoryResponse, environment } from "../../hooks/types";
 
 interface ViewerProps {
   directoryEntries: IListDirectoryResponse[] | undefined;
   onOpenDirectory: (path: string) => void;
-  onDownloadFile: (filename: string) => void;
+  onDownloadFile: (
+    filename: string,
+    relativePath: string,
+    env: environment
+  ) => void;
 }
 
 interface CardProps {
   directoryEntry: IListDirectoryResponse;
   onOpenDirectory: (path: string) => void;
-  onDownloadFile: (filename: string) => void;
+  onDownloadFile: (
+    filename: string,
+    relativePath: string,
+    env: environment
+  ) => void;
 }
 
 const DirectoryCard = ({
@@ -135,7 +143,8 @@ const DirectoryCard = ({
           templateColumns={`40px 1fr 100px 120px 60px`}
           gap={8}
           borderWidth="1px"
-          borderBottom="dashed"
+          borderBottom="solid"
+          borderRight="solid"
           borderColor="lightgrey"
         >
           <GridItem sx={gridStyle} overflowX={"hidden"} ml={1}>
@@ -160,7 +169,13 @@ const DirectoryCard = ({
               rounded="full"
               boxSize="45px"
               colorScheme="gray"
-              onClick={() => onDownloadFile(directoryEntry.name)}
+              onClick={() =>
+                onDownloadFile(
+                  directoryEntry.name,
+                  directoryEntry.relativePath,
+                  directoryEntry.env.name as environment
+                )
+              }
             />
           </GridItem>
         </Grid>

@@ -17,6 +17,7 @@ import { environment } from "./hooks/types";
 import useFuzzySort from "./hooks/useFuzzySort";
 import useHideFromView from "./hooks/useHideFromView";
 import useListDirectory from "./hooks/useListDirectory";
+import downloadFile from "./services/downloadFile";
 
 function App() {
   const home = "\\";
@@ -75,17 +76,19 @@ function App() {
     // console.log(`Current directory: ${path}`);
   };
 
-  const handleDownloadFile = (filename: string) => {
-    const filePath = `${currentDirectory}\\${filename}`;
-    console.log(
-      `Downloading ${filePath} from ${currentDirectory} in ${currentEnvironment}`
-    );
+  const handleDownloadFile = (
+    filename: string,
+    relativePath: string,
+    env: environment
+  ) => {
+    console.log(`Downloading ${relativePath} from the '${env}' environment`);
 
-    // downloadFile({
-    //   url: import.meta.env.VITE_BASEURL,
-    //   path: filePath,
-    //   env: currentEnvironment,
-    // });
+    downloadFile({
+      baseURL: import.meta.env.VITE_BASEURL,
+      path: relativePath,
+      filename: filename,
+      env: env,
+    });
   };
 
   const handleHideFromView = (hidden: hiddenSections) => {

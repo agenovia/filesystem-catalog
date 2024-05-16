@@ -6,19 +6,20 @@ export interface IListDirectoryRequest {
   env: environment;
 }
 
+export interface IDownloadFileRequest extends IListDirectoryRequest {}
+
 export interface IListDirectoryResponse {
   name: string;
-  parentPath: string;
-  fullPath: string;
   relativePath: string;
-  backPath: string;
   isDirectory: boolean;
   isFile: boolean;
+  env: {
+    name: string;
+    workingDirectory: string;
+  };
   stat: {
     mtime: number;
     ctime: number;
     size: number;
   };
 }
-
-export interface IDownloadFileRequest extends IListDirectoryRequest {}
