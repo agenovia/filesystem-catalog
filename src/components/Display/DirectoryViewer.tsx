@@ -10,6 +10,7 @@ import {
   HStack,
   Icon,
   IconButton,
+  Spinner,
   Tag,
   Text,
   VStack,
@@ -17,6 +18,7 @@ import {
 import { GoFile, GoFileDirectory } from "react-icons/go";
 import { IoMdDownload } from "react-icons/io";
 import { IListDirectoryResponse, environment } from "../../hooks/types";
+import { useEffect, useState } from "react";
 
 interface ViewerProps {
   directoryEntries: IListDirectoryResponse[] | undefined;
@@ -73,10 +75,21 @@ const DirectoryCard = ({
   };
 
   const FileCard = () => {
-    // TODO (agenovia): analysis on file extensions
-    // for now, just use generic icons
-    // the FileCard has to determine the proper
-    // icon type and display appropriately
+    const [isDownloading, setIsDownloading] = useState(false);
+    const handleDownloadFile = () => {
+      setIsDownloading(true);
+      onDownloadFile(
+        directoryEntry.name,
+        directoryEntry.relativePath,
+        directoryEntry.env.name as environment
+      );
+    };
+
+    useEffect(() => {
+      setTimeout(() => {
+        isDownloading && setIsDownloading(false);
+      }, 5000);
+    }, [isDownloading]);
 
     const fileSize = () => {
       const memUnits: {
@@ -161,22 +174,19 @@ const DirectoryCard = ({
           <GridItem sx={gridStyle}>
             <Text fontSize="xs"> {lastModifiedTime}</Text>
           </GridItem>
-          <GridItem sx={gridStyle}>
-            <IconButton
-              icon={<IoMdDownload />}
-              aria-label={`Download ${directoryEntry.name}`}
-              title={`Download ${directoryEntry.name}`}
-              rounded="full"
-              boxSize="45px"
-              colorScheme="gray"
-              onClick={() =>
-                onDownloadFile(
-                  directoryEntry.name,
-                  directoryEntry.relativePath,
-                  directoryEntry.env.name as environment
-                )
-              }
-            />
+          <GridItem sx={gridStyle} h="40px">
+            {isDownloading ? (
+              <Spinner ml={2} />
+            ) : (
+              <IconButton
+                icon={<IoMdDownload />}
+                aria-label={`Download ${directoryEntry.name}`}
+                title={`Download ${directoryEntry.name}`}
+                rounded="full"
+                colorScheme="gray"
+                onClick={handleDownloadFile}
+              />
+            )}
           </GridItem>
         </Grid>
       </>
