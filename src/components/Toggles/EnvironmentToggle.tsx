@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { MdInfoOutline } from "react-icons/md";
-import { environment } from "../../hooks/types";
+import { environment } from "../../hooks/interfaces";
 
 interface Props {
   environmentColor: string;
@@ -82,7 +82,6 @@ const EnvironmentToggle = ({
     });
   }, [currentBranch]);
 
-  // track changes to environment and switch when invoked
   const handleToggleEnvironment = () => {
     const toggleTo =
       currentBranch === "mirror"

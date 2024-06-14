@@ -2,7 +2,7 @@ import { Box, Center, HStack, Icon, Tag, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { GoFile, GoFileDirectory } from "react-icons/go";
 import { ImEyeBlocked } from "react-icons/im";
-import { IListDirectoryResponse } from "../../hooks/types";
+import { IListDirectoryResponse } from "../../hooks/interfaces";
 
 interface Props {
   directoryEntries: IListDirectoryResponse[] | undefined;

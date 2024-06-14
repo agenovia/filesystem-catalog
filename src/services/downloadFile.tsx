@@ -1,4 +1,4 @@
-import { environment } from "../hooks/types";
+import { environment } from "../hooks/interfaces";
 
 export interface IDownloadFileRequest {
   baseURL: string;

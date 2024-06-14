@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { GoFile, GoFileDirectory } from "react-icons/go";
 import { IoMdDownload } from "react-icons/io";
-import { IListDirectoryResponse, environment } from "../../hooks/types";
+import { IListDirectoryResponse, environment } from "../../hooks/interfaces";
 import { useEffect, useState } from "react";
 
 interface ViewerProps {

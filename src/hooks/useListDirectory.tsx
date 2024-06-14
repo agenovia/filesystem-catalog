@@ -4,7 +4,7 @@
 // limits cases where user flips between two locations to cross-check
 // possibly provide a utility to perform things like: directory comparisons
 import { useQuery } from "@tanstack/react-query";
-import { IListDirectoryRequest, IListDirectoryResponse } from "./types";
+import { IListDirectoryRequest, IListDirectoryResponse } from "./interfaces";
 
 const useListDirectory = ({ url, path, env }: IListDirectoryRequest) => {
   const endpoint = import.meta.env.VITE_LISTDIRECTORY_ENDPOINT;

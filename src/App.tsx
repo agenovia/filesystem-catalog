@@ -1,4 +1,4 @@
-import { Grid, GridItem, HStack } from "@chakra-ui/react";
+import { Grid, GridItem, HStack, Heading } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import "./App.css";
@@ -13,7 +13,7 @@ import NavBar from "./components/Navigation/NavBar";
 import SearchBar from "./components/Search/SearchBar";
 import CacheRefreshButton from "./components/Toggles/CacheRefreshButton";
 import EnvironmentToggle from "./components/Toggles/EnvironmentToggle";
-import { environment } from "./hooks/types";
+import { environment } from "./hooks/interfaces";
 import useFuzzySort from "./hooks/useFuzzySort";
 import useHideFromView from "./hooks/useHideFromView";
 import useListDirectory from "./hooks/useListDirectory";
@@ -54,26 +54,22 @@ function App() {
   }, [currentQuery]);
 
   useEffect(() => {
-    // if (!isPending && !error) console.log(directoryListing);
     if (error) console.log(error);
   }, [directoryListing]);
 
   const handleCacheRefresh = () => {
-    // this is where we invalidate queries if the user requests a local cache rebuild
+    // invalidate queries if the user requests a local cache rebuild
     queryClient.invalidateQueries();
   };
 
   const handleSwitchEnvironment = (env: environment) => {
     setCurrentQuery("");
     setCurrentEnvironment(env);
-    // console.log(`Current environment: ${env}`);
   };
 
   const handleChangeDirectory = (path: string) => {
     setCurrentQuery("");
-    // console.log(`Changing to: ${path}`);
     setCurrentDirectory(path);
-    // console.log(`Current directory: ${path}`);
   };
 
   const handleDownloadFile = (
@@ -113,9 +109,9 @@ function App() {
     borderRadius: "30px 0px 15px 0px",
   };
 
-  const swipSwap = (config: string) => {
+  const swipSwap = (radii: string) => {
     // swap inner and outer border radii
-    const [outA, inA, inB, outB] = config.split(" ");
+    const [outA, inA, inB, outB] = radii.split(" ");
     return [outB, inB, inA, outA].join(" ");
   };
 
@@ -157,7 +153,8 @@ function App() {
             envColor={envColor}
             onHideFromView={(hidden) => handleHideFromView(hidden)}
           />
-          {isPending && <LoadingIndicator />}
+          {error && <Heading>{error.message}</Heading>}
+          {isPending && !error && <LoadingIndicator />}
           <SearchText query={currentQuery} />
           <DirectoryViewer
             onOpenDirectory={(path: string) => handleChangeDirectory(path)}

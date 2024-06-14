@@ -1,5 +1,5 @@
 import { hiddenSections } from "../components/Display/Summary";
-import { IListDirectoryResponse } from "./types";
+import { IListDirectoryResponse } from "./interfaces";
 
 interface Props {
   hidden: hiddenSections;
